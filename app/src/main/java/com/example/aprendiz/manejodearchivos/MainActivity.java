@@ -2,6 +2,7 @@ package com.example.aprendiz.manejodearchivos;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,7 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
-    Button crear, leer;
+    Button crear, leer, eliminar, limpia;
     EditText edit;
     TextView texto;
 
@@ -25,8 +26,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         crear = (Button) findViewById(R.id.crear);
         leer = (Button) findViewById(R.id.leer);
+        eliminar = (Button) findViewById(R.id.eliminar);
         texto = (TextView) findViewById(R.id.texto);
         edit = (EditText) findViewById(R.id.edit);
+        limpia = (Button) findViewById(R.id.limpia);
+
+        File f = getFilesDir();
+        final String path = f.getAbsolutePath();
 
         crear.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                 edit.setText("");
 
                 try {
-                    FileOutputStream fo = openFileOutput("Archivo.txt", MODE_APPEND);
+                    FileOutputStream fo = openFileOutput("Archivo2.txt", MODE_APPEND);
                     try {
                         fo.write(text.getBytes());
                         fo.close();
@@ -54,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    FileInputStream fi = openFileInput("Archivo.txt");
+                    FileInputStream fi = openFileInput("Archivo2.txt");
                     BufferedInputStream bi = new BufferedInputStream(fi);
                     StringBuffer buffer = new StringBuffer();
 
@@ -74,8 +80,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        File f = getCacheDir();
-        String path = f.getAbsolutePath();
+        eliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File file = new File(path + File.separator + "Archivo2.txt");
+                boolean deleted = file.delete();
+
+                if (deleted) {
+                    texto.setText("Eliminado");
+                } else {
+                    texto.setText("Error al eliminar");
+                }
+            }
+        });
+
+        limpia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String text = "";
+                edit.setText("");
+
+                try {
+                    FileOutputStream fo = openFileOutput("Archivo2.txt", MODE_PRIVATE);
+                    try {
+                        fo.write(text.getBytes());
+                        fo.close();
+                        texto.setText("Se a borrado");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         texto.setText(path);
     }
 }

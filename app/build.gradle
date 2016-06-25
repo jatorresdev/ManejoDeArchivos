@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.example.aprendiz.madejodearchivos"
+        applicationId "com.example.aprendiz.manejodearchivos"
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
